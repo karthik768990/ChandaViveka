@@ -65,7 +65,7 @@ const ChandasAnalyzer = () => {
         <div style={{ marginTop: '20px' }}>
           <h3>Analysis Result</h3>
           <p>
-            <strong>Identified Chandas:</strong> {analysis.identifiedChandas || 'Unknown'}
+            <strong>Identified Chandas:</strong> {analysis.identifiedChandas}
           </p>
           
           {/* --- NEWLY ADDED --- */}

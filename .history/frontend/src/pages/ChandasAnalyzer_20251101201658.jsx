@@ -65,38 +65,16 @@ const ChandasAnalyzer = () => {
         <div style={{ marginTop: '20px' }}>
           <h3>Analysis Result</h3>
           <p>
-            <strong>Identified Chandas:</strong> {analysis.identifiedChandas || 'Unknown'}
+            <strong>Identified Chandas:</strong> {analysis.identifiedChandas}
           </p>
           
           {/* --- NEWLY ADDED --- */}
           <p>
-  <strong>Laghu/Guru Pattern (by Pāda):</strong>
-  <br />
-  {analysis.pattern?.byPada?.map((p, idx) => (
-    <code 
-      key={idx} 
-      style={{ 
-        background: '#eee', 
-        padding: '2px 4px', 
-        letterSpacing: '2px', 
-        display: 'block', 
-        margin: '4px 0' 
-      }}
-    >
-      {p}
-    </code>
-  ))}
-</p>
-
-<p>
-  <strong>Combined Pattern:</strong>
-  <code 
-    style={{ background: '#eee', padding: '2px 4px', letterSpacing: '2px' }}
-  >
-    {analysis.pattern?.combined || 'N/A'}
-  </code>
-</p>
-
+            <strong>Laghu/Guru Pattern:</strong> 
+            <code style={{ background: '#eee', padding: '2px 4px', letterSpacing: '2px' }}>
+              {analysis.pattern || 'N/A'}
+            </code>
+          </p>
           {/* --- END NEW --- */}
           
           <p>
