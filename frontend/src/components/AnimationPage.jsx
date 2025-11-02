@@ -1,9 +1,11 @@
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 
+// subtle page animation; safe and small
 const animations = {
-  initial: { opacity: 0, y: 10 },
+  initial: { opacity: 0, y: 6 },
   animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -10 },
+  exit: { opacity: 0, y: -6 },
 };
 
 const AnimatedPage = ({ children }) => {
@@ -13,7 +15,7 @@ const AnimatedPage = ({ children }) => {
       initial="initial"
       animate="animate"
       exit="exit"
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.28, ease: "easeOut" }}
     >
       {children}
     </motion.div>
