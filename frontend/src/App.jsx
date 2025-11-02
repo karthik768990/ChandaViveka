@@ -1,8 +1,10 @@
 import React from "react";
+
 import { Routes, Route, useLocation } from "react-router-dom";
 import Layout from "./components/Layout.jsx";
 import Home from "./pages/Home.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import Settings from "./pages/Settings.jsx";
 import ChandasAnalyzer from "./pages/ChandasAnalyzer.jsx";
 import CallbackPage from "./pages/Callback.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
@@ -33,6 +35,8 @@ const App = () => {
             }
           />
           <Route path="/auth/callback" element={<CallbackPage />} />
+          <Route path="/settings" element={<Settings />} />
+
         </Routes>
       </AnimatedPage>
     </Layout>

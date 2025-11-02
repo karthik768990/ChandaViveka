@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -15,6 +15,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 const Header = () => {
   const { user, logout } = useAuth();
   const { colorMode, toggleColorMode } = useColorMode();
+  const navigate = useNavigate();
 
   // Try to get user's name from metadata
   const displayName =
@@ -47,23 +48,18 @@ const Header = () => {
               fontWeight="bold"
               fontSize={{ base: "lg", md: "xl" }}
               color="teal.200"
+              _hover={{ color: "teal.300" }}
             >
               Chandas AI
             </Text>
           </Link>
+
           {user && (
-            <>
-              <Link to="/dashboard">
-                <Text color="gray.300" _hover={{ color: "teal.200" }}>
-                  Dashboard
-                </Text>
-              </Link>
-              <Link to="/analyzer">
-                <Text color="gray.300" _hover={{ color: "teal.200" }}>
-                  Analyzer
-                </Text>
-              </Link>
-            </>
+            <Link to="/analyzer">
+              <Text color="gray.300" _hover={{ color: "teal.200" }}>
+                Analyzer
+              </Text>
+            </Link>
           )}
         </HStack>
 
@@ -80,13 +76,18 @@ const Header = () => {
           />
           {user ? (
             <>
+              {/* 👇 Username now clickable to go to settings */}
               <Text
                 color="teal.100"
                 fontWeight="medium"
                 fontSize={{ base: "sm", md: "md" }}
+                cursor="pointer"
+                _hover={{ textDecoration: "underline", color: "teal.300" }}
+                onClick={() => navigate("/settings")}
               >
                 {displayName}
               </Text>
+
               <Button colorScheme="red" size="sm" onClick={logout}>
                 Logout
               </Button>

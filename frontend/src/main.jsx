@@ -1,13 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme, ColorModeScript } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import App from "./App.jsx";
 import "./index.css";
 
+// 🖤 Theme configuration for dark mode
+const config = {
+  initialColorMode: "dark",
+  useSystemColorMode: false,
+};
+
 // 🖤 Theme customization — Dark gradient base with soft gray text
 const theme = extendTheme({
+  config,
   styles: {
     global: {
       body: {
@@ -29,7 +36,6 @@ const theme = extendTheme({
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-// 🚫 Optional: clean the console on dev startup
 if (import.meta.env.MODE === "development") {
   console.clear();
 }
@@ -37,6 +43,8 @@ if (import.meta.env.MODE === "development") {
 root.render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
+      {/* This ensures correct color mode persistence */}
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <BrowserRouter>
         <AuthProvider>
           <App />
