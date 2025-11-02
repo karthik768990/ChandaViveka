@@ -1,28 +1,39 @@
-import React, { useEffect } from "react";
+// src/pages/Callback.jsx
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.jsx";
-import { Center, Spinner, Text, VStack } from "@chakra-ui/react";
+import { supabase } from "../services/supabaseClient";
 
-const Callback = () => {
-  const { session } = useAuth();
+const CallbackPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (session) {
-      // small delay for UX, then navigate
-      const t = setTimeout(() => navigate("/dashboard"), 300);
-      return () => clearTimeout(t);
-    }
-  }, [session, navigate]);
+    console.log("Callback page mounted...");
+    const handleAuth = async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) throw error;
+
+        if (data?.session) {
+          console.log("✅ Logged in successfully, redirecting...");
+          navigate("/analyzer"); // or "/dashboard" if you prefer
+        } else {
+          console.warn("⚠️ No session found, redirecting to home.");
+          navigate("/");
+        }
+      } catch (err) {
+        console.error("Callback error:", err.message);
+        navigate("/");
+      }
+    };
+
+    handleAuth();
+  }, [navigate]);
 
   return (
-    <Center minH="60vh">
-      <VStack spacing={3}>
-        <Spinner size="lg" />
-        <Text>Processing login... Please wait.</Text>
-      </VStack>
-    </Center>
+    <div style={{ color: "#ccc", textAlign: "center", marginTop: "3rem" }}>
+      Logging you in... Please wait.
+    </div>
   );
 };
 
-export default Callback;
+export default CallbackPage;
