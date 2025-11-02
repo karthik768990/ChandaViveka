@@ -14,7 +14,8 @@ const theme = extendTheme({})
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
+<BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+
       <AuthProvider>
         {/* 3. Pass the theme to the provider */}
         <ChakraProvider theme={theme}>
