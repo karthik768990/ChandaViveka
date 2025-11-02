@@ -1,20 +1,9 @@
-import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
-import {
-  Box,
-  Button,
-  Heading,
-  Text,
-  VStack,
-  Flex,
-  useColorModeValue,
-  Container,
-} from "@chakra-ui/react";
-import AnimatedPage from "../components/AnimationPage.jsx";
+import { Box, Button, Heading, Text, VStack, Flex } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import AnimatedPage from "../components/AnimationPage.jsx";
 
-// Framer Motion v11+ API
 const MotionVStack = motion.create(VStack);
 const MotionButton = motion.create(Button);
 
@@ -25,45 +14,40 @@ const Home = () => {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const pageBg = useColorModeValue("linear-gradient(180deg,#f8fafc, #ffffff)", "");
   return (
     <AnimatedPage>
-      <Flex align="center" justify="center" minH="calc(100vh - 96px)">
-        <Container maxW="container.md">
-          <MotionVStack
-            spacing={6}
-            p={{ base: 6, md: 10 }}
-            bg="white"
-            rounded="xl"
-            shadow="lg"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.36 }}
-            align="center"
+      <Flex
+        align="center"
+        justify="center"
+        height="calc(100vh - 80px)"
+        bgGradient="linear(to-b, blue.900, gray.900)"
+      >
+        <MotionVStack
+          spacing={6}
+          p={10}
+          bg="whiteAlpha.100"
+          rounded="2xl"
+          shadow="2xl"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
+          <Heading as="h2" size="xl" color="teal.200">
+            Welcome to Chandas AI
+          </Heading>
+          <Text fontSize="lg" color="gray.300" textAlign="center">
+            Identify Sanskrit meters effortlessly with AI assistance.
+          </Text>
+          <MotionButton
+            colorScheme="teal"
+            size="lg"
+            onClick={loginWithGoogle}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <Heading as="h1" size="xl" textAlign="center">
-              Chandas AI
-            </Heading>
-            <Text fontSize="lg" color="gray.600" textAlign="center" maxW="lg">
-              Analyze Sanskrit ślokas and automatically identify classical meters
-              (chandas). Sign in with Google to save your history and preferences.
-            </Text>
-
-            <MotionButton
-              onClick={loginWithGoogle}
-              size="lg"
-              colorScheme="blue"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Sign in with Google
-            </MotionButton>
-
-            <Box pt={2} fontSize="sm" color="gray.500">
-              No data is shared publicly — authentication is via Supabase OAuth.
-            </Box>
-          </MotionVStack>
-        </Container>
+            Login with Google
+          </MotionButton>
+        </MotionVStack>
       </Flex>
     </AnimatedPage>
   );

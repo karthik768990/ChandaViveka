@@ -1,27 +1,47 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import { BrowserRouter } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext.jsx'
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import App from "./App.jsx";
+import "./index.css";
 
+// 🖤 Theme customization — Dark gradient base with soft gray text
+const theme = extendTheme({
+  styles: {
+    global: {
+      body: {
+        bgGradient: "linear(to-br, gray.900, gray.800)",
+        color: "gray.100",
+        minHeight: "100vh",
+        overflowX: "hidden",
+      },
+      a: {
+        color: "teal.300",
+        _hover: { textDecoration: "underline" },
+      },
+      button: {
+        _focus: { boxShadow: "none" },
+      },
+    },
+  },
+});
 
-// 1. Get BOTH from the main '@chakra-ui/react' package
-import { ChakraProvider, extendTheme } from '@chakra-ui/react' 
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
-// 2. Create a default theme
-const theme = extendTheme({})
+// 🚫 Optional: clean the console on dev startup
+if (import.meta.env.MODE === "development") {
+  console.clear();
+}
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+root.render(
   <React.StrictMode>
-<BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-
-      <AuthProvider>
-        {/* 3. Pass the theme to the provider */}
-        <ChakraProvider theme={theme}>
+    <ChakraProvider theme={theme}>
+      <BrowserRouter>
+        <AuthProvider>
           <App />
-        </ChakraProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  </React.StrictMode>,
-)
+        </AuthProvider>
+      </BrowserRouter>
+    </ChakraProvider>
+  </React.StrictMode>
+);

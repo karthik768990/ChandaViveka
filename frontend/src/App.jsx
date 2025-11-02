@@ -1,45 +1,42 @@
-import { Routes, Route, useLocation } from 'react-router-dom' // 1. Import useLocation
-import { AnimatePresence } from 'framer-motion' // 2. Import AnimatePresence
-import Layout from './components/Layout.jsx'
-import Home from './pages/Home.jsx'
-import Callback from './pages/Callback.jsx'
-import Dashboard from './pages/Dashboard.jsx'
-import ChandasAnalyzer from './pages/ChandasAnalyzer.jsx'
-import ProtectedRoute from './components/ProtectedRoute.jsx'
+import React from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import Layout from "./components/Layout.jsx";
+import Home from "./pages/Home.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import ChandasAnalyzer from "./pages/ChandasAnalyzer.jsx";
+import CallbackPage from "./pages/Callback.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import AnimatedPage from "./components/AnimationPage.jsx";
 
-function App() {
-  const location = useLocation(); // 3. Get the current page location
+const App = () => {
+  const location = useLocation();
 
   return (
     <Layout>
-      {/* 4. Wrap your routes. The key is essential. */}
-      <AnimatePresence mode="wait">
+      <AnimatedPage key={location.pathname}>
         <Routes location={location} key={location.pathname}>
-          {/* Public Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/callback" element={<Callback />} />
-          
-          {/* Protected Routes */}
-          <Route 
-            path="/dashboard" 
+          <Route
+            path="/dashboard"
             element={
               <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/analyzer" 
+          <Route
+            path="/analyzer"
             element={
               <ProtectedRoute>
                 <ChandasAnalyzer />
               </ProtectedRoute>
-            } 
+            }
           />
+          <Route path="/auth/callback" element={<CallbackPage />} />
         </Routes>
-      </AnimatePresence>
+      </AnimatedPage>
     </Layout>
-  )
-}
+  );
+};
 
-export default App
+export default App;

@@ -1,15 +1,13 @@
-import React from "react";
-import { Box, Container, useColorModeValue } from "@chakra-ui/react";
-import Header from "./Header";
+import Header from "./Header.jsx";
+import { Box } from "@chakra-ui/react";
 
 const Layout = ({ children }) => {
-  const bg = useColorModeValue("gray.50", "gray.900");
   return (
-    <Box minH="100vh" bg={bg}>
+    <Box minH="100vh" bgGradient="linear(to-b, gray.900, gray.800)">
       <Header />
-      <Container maxW="1200px" pt={6} pb={12}>
+      <Box as="main" p={6}>
         {children}
-      </Container>
+      </Box>
     </Box>
   );
 };
