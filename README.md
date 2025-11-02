@@ -29,6 +29,7 @@
 
 ## 📁 Project Structure
 
+```bash
 
 chanda-viveka/
 ├── backend/
@@ -45,7 +46,7 @@ chanda-viveka/
 │ └── vite.config.js
 └── README.md
 
-
+```
 ---
 
 ## 🚀 Getting Started
@@ -140,5 +141,4 @@ Karthik Tamarapalli — Project Lead & Developer
 
 
 
-## 📁 Project Structure
 
