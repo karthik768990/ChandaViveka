@@ -42,7 +42,7 @@ const Header = () => {
       >
         {/* Left Section */}
         <HStack spacing={6}>
-          <Link to="/">
+          <Link to="/dashboard">
             <Text
               fontWeight="bold"
               fontSize={{ base: "lg", md: "xl" }}
