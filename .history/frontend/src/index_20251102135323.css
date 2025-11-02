@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+a {
+  color: #63b3ed;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
