@@ -25,41 +25,38 @@ import {
 import AnimatedPage from "../components/AnimationPage";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Framer Motion v11+ API
 const MotionCard = motion.create(Card);
 
-// small helper to render pattern characters as colored chips
 const PatternChip = ({ char }) => {
-  const bg = char === "L" || char === "l" ? "teal.50" : "purple.50";
-  const color = char === "L" || char === "l" ? "teal.700" : "purple.700";
+  const isLaghu = char === "L" || char === "l";
+  const bg = isLaghu ? "rgba(56, 178, 172, 0.15)" : "rgba(128, 90, 213, 0.15)";
+  const color = isLaghu ? "teal.300" : "purple.300";
   return (
     <Badge
       px={2}
       py={1}
-      rounded="sm"
+      rounded="md"
       bg={bg}
       color={color}
       fontWeight="600"
       fontSize="sm"
-      mr={1}
+      borderWidth="1px"
+      borderColor={isLaghu ? "teal.400" : "purple.400"}
     >
       {char.toUpperCase()}
     </Badge>
   );
 };
 
-const renderPatternStringAsChips = (str = "") => {
-  // Accept strings like "LLGLG..." and render chips
-  return (
-    <Wrap spacing={2}>
-      {str.split("").map((c, i) => (
-        <WrapItem key={i}>
-          <PatternChip char={c} />
-        </WrapItem>
-      ))}
-    </Wrap>
-  );
-};
+const renderPatternStringAsChips = (str = "") => (
+  <Wrap spacing={2}>
+    {str.split("").map((c, i) => (
+      <WrapItem key={i}>
+        <PatternChip char={c} />
+      </WrapItem>
+    ))}
+  </Wrap>
+);
 
 const ChandasAnalyzer = () => {
   const [shloka, setShloka] = useState("");
@@ -67,17 +64,18 @@ const ChandasAnalyzer = () => {
   const [chandasList, setChandasList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const cardBg = useColorModeValue("white", "gray.800");
+
+  // theme-controlled colors
+  const cardBg = useColorModeValue("whiteAlpha.900", "gray.900");
+  const inputBg = useColorModeValue("gray.50", "gray.800");
+  const borderGlow = useColorModeValue("#63B3ED", "#81E6D9");
+  const textColor = useColorModeValue("gray.700", "gray.200");
 
   useEffect(() => {
     const fetchChandas = async () => {
       try {
         const { data } = await api.get("/chandas");
-        if (data.success) {
-          setChandasList(data.data);
-        } else {
-          setChandasList([]);
-        }
+        if (data.success) setChandasList(data.data);
       } catch (err) {
         console.error("Error fetching chandas list", err);
       }
@@ -92,11 +90,8 @@ const ChandasAnalyzer = () => {
     setAnalysis(null);
     try {
       const { data } = await api.post("/chandas/analyze", { shloka });
-      if (data.success) {
-        setAnalysis(data.analysis);
-      } else {
-        setError(data.message || "Unable to analyze");
-      }
+      if (data.success) setAnalysis(data.analysis);
+      else setError(data.message || "Unable to analyze");
     } catch (err) {
       setError(err.response?.data?.message || err.message || "Server error");
     } finally {
@@ -106,14 +101,24 @@ const ChandasAnalyzer = () => {
 
   return (
     <AnimatedPage>
-      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8} p={2}>
-        {/* LEFT: Analyzer */}
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8} p={4}>
+        {/* LEFT PANEL */}
         <VStack spacing={6} align="stretch">
-          <Heading as="h2" size="lg">
+          <Heading as="h2" size="lg" color="white">
             Chandas Analyzer
           </Heading>
 
-          <Card bg={cardBg} shadow="sm">
+          <Card
+            bg={cardBg}
+            shadow="lg"
+            borderWidth="1px"
+            borderColor="transparent"
+            transition="all 0.3s ease"
+            _hover={{
+              borderColor: borderGlow,
+              boxShadow: `0 0 15px ${borderGlow}`,
+            }}
+          >
             <CardBody>
               <Box as="form" onSubmit={handleSubmit}>
                 <VStack spacing={4}>
@@ -121,20 +126,32 @@ const ChandasAnalyzer = () => {
                     rows={8}
                     value={shloka}
                     onChange={(e) => setShloka(e.target.value)}
-                    placeholder="Enter your śloka here (Devanagari or IAST)."
-                    shadow="sm"
-                    bg="white"
+                    placeholder="Enter your śloka here (Devanagari or IAST)"
+                    bg={inputBg}
+                    color={textColor}
+                    borderColor="transparent"
+                    borderWidth="1px"
+                    rounded="lg"
+                    transition="all 0.3s ease"
+                    _hover={{
+                      borderColor: borderGlow,
+                      boxShadow: `0 0 10px ${borderGlow}`,
+                    }}
+                    _focus={{
+                      borderColor: borderGlow,
+                      boxShadow: `0 0 15px ${borderGlow}`,
+                    }}
                   />
 
                   <Button
                     type="submit"
-                    colorScheme="blue"
+                    colorScheme="teal"
                     isLoading={loading}
                     loadingText="Analyzing..."
                     width="100%"
                     as={motion.button}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
                   >
                     Analyze
                   </Button>
@@ -156,35 +173,50 @@ const ChandasAnalyzer = () => {
               <MotionCard
                 bg={cardBg}
                 variant="outline"
+                borderColor="transparent"
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
+                _hover={{
+                  borderColor: borderGlow,
+                  boxShadow: `0 0 15px ${borderGlow}`,
+                }}
               >
                 <CardHeader>
-                  <Heading size="md">Analysis Result</Heading>
+                  <Heading size="md" color={textColor}>
+                    Analysis Result
+                  </Heading>
                 </CardHeader>
                 <CardBody>
                   <VStack spacing={4} align="stretch">
                     <HStack>
-                      <Text fontWeight="semibold">Identified Chandas:</Text>
+                      <Text fontWeight="semibold" color={textColor}>
+                        Identified Chandas:
+                      </Text>
                       <Badge colorScheme="green">
                         {analysis.identifiedChandas || "Unknown"}
                       </Badge>
                     </HStack>
 
                     <Box>
-                      <Text fontWeight="semibold">Laghu/Guru Pattern:</Text>
+                      <Text fontWeight="semibold" color={textColor}>
+                        Laghu/Guru Pattern:
+                      </Text>
                       <Box mt={2}>
                         {analysis.pattern ? (
                           typeof analysis.pattern === "object" ? (
                             <>
                               {analysis.pattern.combined && (
-                                <Box mb={2}>{renderPatternStringAsChips(analysis.pattern.combined)}</Box>
+                                <Box mb={2}>
+                                  {renderPatternStringAsChips(analysis.pattern.combined)}
+                                </Box>
                               )}
                               {analysis.pattern.byPada && (
                                 <VStack align="start" spacing={2}>
                                   {analysis.pattern.byPada.map((p, idx) => (
                                     <Box key={idx}>
-                                      <Text fontSize="sm" color="gray.500">Pada {idx + 1}:</Text>
+                                      <Text fontSize="sm" color="gray.400">
+                                        Pada {idx + 1}:
+                                      </Text>
                                       <Box mt={1}>{renderPatternStringAsChips(p)}</Box>
                                     </Box>
                                   ))}
@@ -192,7 +224,13 @@ const ChandasAnalyzer = () => {
                               )}
                             </>
                           ) : (
-                            <Code p={2} rounded="md" display="block" whiteSpace="pre-wrap">
+                            <Code
+                              p={2}
+                              rounded="md"
+                              display="block"
+                              whiteSpace="pre-wrap"
+                              color={textColor}
+                            >
                               {analysis.pattern}
                             </Code>
                           )
@@ -203,8 +241,10 @@ const ChandasAnalyzer = () => {
                     </Box>
 
                     <Box>
-                      <Text fontWeight="semibold">Explanation:</Text>
-                      <Text mt={1} color="gray.700">
+                      <Text fontWeight="semibold" color={textColor}>
+                        Explanation:
+                      </Text>
+                      <Text mt={1} color="gray.400">
                         {analysis.explanation || "—"}
                       </Text>
                     </Box>
@@ -215,26 +255,42 @@ const ChandasAnalyzer = () => {
           </AnimatePresence>
         </VStack>
 
-        {/* RIGHT: Meters list */}
+        {/* RIGHT PANEL */}
         <VStack spacing={6} align="stretch">
-          <Heading as="h3" size="lg">
+          <Heading as="h3" size="lg" color="white">
             Available Meters
           </Heading>
-          <Card bg={cardBg} shadow="sm">
+          <Card
+            bg={cardBg}
+            shadow="lg"
+            borderWidth="1px"
+            borderColor="transparent"
+            transition="all 0.3s ease"
+            _hover={{
+              borderColor: borderGlow,
+              boxShadow: `0 0 15px ${borderGlow}`,
+            }}
+          >
             <CardBody>
               {chandasList.length > 0 ? (
-                <List spacing={3}>
+                <List spacing={4}>
                   {chandasList.map((c) => (
                     <ListItem key={c.id || c.name}>
                       <HStack justify="space-between">
-                        <Text fontWeight="600">{c.name}</Text>
-                        <Text color="gray.500" fontSize="sm">
-                          {typeof c.pattern === "string" ? c.pattern : c.pattern.combined || "—"}
+                        <Text fontWeight="600" color={textColor}>
+                          {c.name}
+                        </Text>
+                        <Text color="gray.400" fontSize="sm">
+                          {typeof c.pattern === "string"
+                            ? c.pattern
+                            : c.pattern.combined || "—"}
                         </Text>
                       </HStack>
                       {c.description && (
                         <Text mt={1} fontSize="sm" color="gray.500">
-                          {c.description.length > 120 ? `${c.description.slice(0, 117)}...` : c.description}
+                          {c.description.length > 120
+                            ? `${c.description.slice(0, 117)}...`
+                            : c.description}
                         </Text>
                       )}
                     </ListItem>

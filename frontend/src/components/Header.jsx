@@ -9,7 +9,7 @@ import {
   Text,
   Spacer,
 } from "@chakra-ui/react";
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { MoonIcon, SunIcon, SettingsIcon } from "@chakra-ui/icons";
 import { useAuth } from "../context/AuthContext.jsx";
 
 const Header = () => {
@@ -17,7 +17,6 @@ const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const navigate = useNavigate();
 
-  // Try to get user's name from metadata
   const displayName =
     user?.user_metadata?.full_name ||
     user?.user_metadata?.name ||
@@ -26,14 +25,17 @@ const Header = () => {
 
   return (
     <Box
-      bg="gray.800"
+      bg="gray.900"
       w="100vw"
       px={{ base: 4, md: 8 }}
       py={3}
-      shadow="md"
+      shadow="xl"
       position="sticky"
       top="0"
       zIndex="10"
+      borderBottom="1px solid"
+      borderColor="whiteAlpha.200"
+      transition="all 0.3s ease"
     >
       <Flex
         align="center"
@@ -43,23 +45,37 @@ const Header = () => {
       >
         {/* Left Section */}
         <HStack spacing={6}>
-          <Link to="/dashboard">
+          <Link to="/">
             <Text
               fontWeight="bold"
               fontSize={{ base: "lg", md: "xl" }}
               color="teal.200"
-              _hover={{ color: "teal.300" }}
+              transition="all 0.3s ease"
+              _hover={{
+                textShadow: "0 0 10px #38B2AC, 0 0 20px #319795",
+                transform: "scale(1.05)",
+              }}
             >
               Chandas AI
             </Text>
           </Link>
 
           {user && (
-            <Link to="/analyzer">
-              <Text color="gray.300" _hover={{ color: "teal.200" }}>
-                Analyzer
-              </Text>
-            </Link>
+            <>
+              <Link to="/analyzer">
+                <Text
+                  color="gray.300"
+                  transition="all 0.3s ease"
+                  _hover={{
+                    color: "teal.200",
+                    textShadow: "0 0 10px #38B2AC, 0 0 20px #319795",
+                    transform: "scale(1.05)",
+                  }}
+                >
+                  Analyzer
+                </Text>
+              </Link>
+            </>
           )}
         </HStack>
 
@@ -67,28 +83,60 @@ const Header = () => {
 
         {/* Right Section */}
         <HStack spacing={{ base: 2, md: 4 }}>
+          {/* Theme Toggle */}
           <IconButton
             icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             onClick={toggleColorMode}
             variant="ghost"
             color="teal.200"
+            transition="all 0.3s ease"
+            _hover={{
+              boxShadow: "0 0 10px #38B2AC, 0 0 20px #319795",
+              transform: "scale(1.1)",
+            }}
             aria-label="Toggle color mode"
           />
+
+          {/* Settings Icon */}
+          {user && (
+            <IconButton
+              icon={<SettingsIcon />}
+              variant="ghost"
+              color="teal.200"
+              transition="all 0.3s ease"
+              _hover={{
+                boxShadow: "0 0 10px #38B2AC, 0 0 20px #319795",
+                transform: "scale(1.1)",
+              }}
+              aria-label="Settings"
+              onClick={() => navigate("/settings")}
+            />
+          )}
+
+          {/* Username and Logout */}
           {user ? (
             <>
-              {/* 👇 Username now clickable to go to settings */}
               <Text
                 color="teal.100"
                 fontWeight="medium"
                 fontSize={{ base: "sm", md: "md" }}
-                cursor="pointer"
-                _hover={{ textDecoration: "underline", color: "teal.300" }}
-                onClick={() => navigate("/settings")}
+                transition="all 0.3s ease"
+                _hover={{
+                  textShadow: "0 0 10px #38B2AC, 0 0 20px #319795",
+                }}
               >
                 {displayName}
               </Text>
-
-              <Button colorScheme="red" size="sm" onClick={logout}>
+              <Button
+                colorScheme="red"
+                size="sm"
+                transition="all 0.3s ease"
+                _hover={{
+                  boxShadow: "0 0 10px #E53E3E, 0 0 20px #C53030",
+                  transform: "scale(1.05)",
+                }}
+                onClick={logout}
+              >
                 Logout
               </Button>
             </>
