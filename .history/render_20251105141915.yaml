@@ -1,5 +1,4 @@
 services:
-  # 🟦 Backend Service
   - type: web
     name: chanda-backend
     env: docker
@@ -9,13 +8,7 @@ services:
     envVars:
       - key: PORT
         value: 3000
-      # optional - use if you have environment variables in .env file
-      # - key: SUPABASE_URL
-      #   sync: false
-      # - key: SUPABASE_KEY
-      #   sync: false
 
-  # 🟨 Frontend Service
   - type: web
     name: chanda-frontend
     env: docker
@@ -23,6 +16,5 @@ services:
     buildCommand: ""
     startCommand: ""
     envVars:
-      # Important: The frontend should call backend using this URL
       - key: VITE_BACKEND_URL
         value: https://chanda-backend-urnl.onrender.com
