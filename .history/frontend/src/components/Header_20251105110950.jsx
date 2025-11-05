@@ -56,7 +56,7 @@ const Header = () => {
                 transform: "scale(1.05)",
               }}
             >
-              Chanda Viveka
+              Chandas VIVEKA
             </Text>
           </Link>
 

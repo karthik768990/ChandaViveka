@@ -1,0 +1,31 @@
+# render.yaml
+services:
+  - type: web
+    name: chanda-backend
+    env: docker
+    plan: free
+    region: singapore
+    buildCommand: docker compose build backend
+    startCommand: docker compose up backend
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: PORT
+        value: 3000
+
+  - type: web
+    name: chanda-frontend
+    env: docker
+    plan: free
+    region: singapore
+    buildCommand: docker compose build frontend
+    startCommand: docker compose up frontend
+    envVars:
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_KEY
+        sync: false
+      - key: VITE_API_URL
+        sync: false
