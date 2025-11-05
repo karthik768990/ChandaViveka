@@ -37,6 +37,7 @@ chanda-viveka/
 │ ├── routes/
 │ ├── controllers/
 │ └── utils/
+| |__Dockerfile
 ├── frontend/
 │ ├── src/
 │ │ ├── pages/
@@ -44,7 +45,9 @@ chanda-viveka/
 │ │ ├── context/
 │ │ └── App.jsx
 │ └── vite.config.js
+| |__ Dockerfile
 └── README.md
+|__docker-compose.yml
 
 ```
 ---
@@ -74,7 +77,14 @@ npm install
 npm run dev
 
 ```
+## Docker Setup 
+ Can automatically set the backend and the front end with the commands listed below
 
+ ```bash
+        docker compose build
+        docker compose up
+
+```
 
 The frontend runs by default on http://localhost:5173
 
