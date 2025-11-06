@@ -4,6 +4,7 @@ import {
   handleAuthCallback,
   getUserProfile,
 } from "../controllers/authController.js";
+
 import { verifyAuth } from "../middleware/authMiddleWare.js";
 
 const router = express.Router();

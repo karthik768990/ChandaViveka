@@ -1,8 +1,9 @@
+
 export const validateShlokaInput = (req, res, next) => {
   try {
     const { shloka } = req.body;
 
-    // 1️ Checking if shloka is provided and is a string
+    // 1️⃣ Check if shloka is provided and is a string
     if (!shloka || typeof shloka !== "string") {
       return res.status(400).json({
         success: false,
@@ -10,8 +11,7 @@ export const validateShlokaInput = (req, res, next) => {
       });
     }
 
-    //  Trim and normalize whitespace at the beginning and the end of the input
-
+    // 2️⃣ Trim and normalize whitespace
     const normalized = shloka.trim();
     if (normalized.length === 0) {
       return res.status(400).json({
@@ -20,21 +20,21 @@ export const validateShlokaInput = (req, res, next) => {
       });
     }
 
-    // 3️ Optional: Prevent excessively long input
+    // 3️⃣ Optional: Prevent excessively long input
     if (normalized.length > 1000) {
       return res.status(400).json({
         success: false,
-        message:
-          "Input too long: please limit your shloka to under 1000 characters.",
+        message: "Input too long: please limit your shloka to under 1000 characters.",
       });
     }
 
-    // Optional: Remove unwanted control characters or HTML tags
+    // 4️⃣ Optional: Remove unwanted control characters or HTML tags
     const cleaned = normalized.replace(/<[^>]*>?/gm, ""); // remove HTML tags
 
     // Attach cleaned version to the request body
     req.body.shloka = cleaned;
 
+    // ✅ Proceed to the controller
     next();
   } catch (error) {
     console.error("Error in input validation middleware:", error);

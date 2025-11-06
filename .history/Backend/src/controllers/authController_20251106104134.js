@@ -8,8 +8,8 @@ dotenv.config();
  */
 export const loginWithGoogle = async (req, res) => {
   const redirectTo = `${
-    process.env.APP_REDIRECT_URL || "https://chada-frontend.onrender.com"  //HardCoded as the webpage i will be using is the static and fixed
-  }`; 
+    process.env.APP_REDIRECT_URL || "http://localhost:5173"
+  }`; // TODO here the localhost:3000 is only the frontend call back url which means the backend should know where to send the user after a successful login with the google
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
@@ -28,8 +28,9 @@ export const loginWithGoogle = async (req, res) => {
   });
 };
 
-//to handle the authentication call back after the google login
-
+/**
+ * Handle the OAuth callback
+ */
 export const handleAuthCallback = async (req, res) => {
   const { access_token, refresh_token } = req.query;
 
@@ -47,8 +48,9 @@ export const handleAuthCallback = async (req, res) => {
   });
 };
 
-
-
+/**
+ * Example protected route
+ */
 export const getUserProfile = async (req, res) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];

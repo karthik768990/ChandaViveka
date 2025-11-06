@@ -17,14 +17,12 @@ const CallbackPage = () => {
       } else {
         // Wait for auth state change after redirect
         console.log("⏳ Waiting for session...");
-        const { data: listener } = supabase.auth.onAuthStateChange(
-          (_event, session) => {
-            if (session) {
-              console.log("✅ Session received! Redirecting...");
-              navigate("/analyzer", { replace: true });
-            }
+        const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+          if (session) {
+            console.log("✅ Session received! Redirecting...");
+            navigate("/analyzer", { replace: true });
           }
-        );
+        });
 
         setTimeout(() => {
           listener.subscription.unsubscribe();

@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { supabase } from "../services/supabaseClient";
-import api from "../services/api"; // Our custom axios instance
+import { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '../services/supabaseClient';
+import api from '../services/api'; // Our custom axios instance
 
 const AuthContext = createContext();
 
@@ -18,12 +18,12 @@ export const AuthProvider = ({ children }) => {
     });
 
     // 2. Listen for any auth changes (login, logout, token refresh)
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+      }
+    );
 
     // 3. Cleanup listener on unmount
     return () => subscription.unsubscribe();
@@ -33,14 +33,14 @@ export const AuthProvider = ({ children }) => {
   const loginWithGoogle = async () => {
     try {
       // This calls http://localhost:3000/api/auth/login
-      const { data } = await api.get("/auth/login");
-
+      const { data } = await api.get('/auth/login');
+      
       if (data.success && data.url) {
         // Redirect the user to the Google sign-in page
         window.location.href = data.url;
       }
     } catch (error) {
-      console.error("Error logging in:", error);
+      console.error('Error logging in:', error);
     }
   };
 

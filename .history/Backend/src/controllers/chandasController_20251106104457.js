@@ -1,7 +1,7 @@
 import { supabase } from "../services/supabaseClient.js";
 import Sanscript from "sanscript";
 
-//  Sanskrit Prosody (Chandas) Analyzer controller for the backend analysis fo the strings
+//  Sanskrit Prosody (Chandas) Analyzer controller for the backend analysis fo the strings 
 
 /**
  * Syllabifier — returns Laghu/Guru pattern for each pāda
@@ -11,46 +11,41 @@ import Sanscript from "sanscript";
 const getLgPattern = (shloka) => {
   const padaList = shloka
     .split(/[|।॥\n]+/)
-    .map((p) => p.trim())
-    .filter((p) => p.length > 0);
+    .map(p => p.trim())
+    .filter(p => p.length > 0);
 
-  const vowels = "aiuṛḷāīūṝeo";
-  const longVowels = "āīūṝeo";
+  const vowels = 'aiuṛḷāīūṝeo';
+  const longVowels = 'āīūṝeo';
   const patterns = [];
 
   for (const pada of padaList) {
     let iast = Sanscript.t(pada, "devanagari", "iast").toLowerCase();
-    iast = iast.replace(/[.,\d\s]+/g, "");
+    iast = iast.replace(/[.,\d\s]+/g, '');
 
-    let pattern = "";
+    let pattern = '';
     for (let i = 0; i < iast.length; i++) {
       const char = iast[i];
       if (!vowels.includes(char)) continue;
 
-      if (char === "a" && (iast[i + 1] === "i" || iast[i + 1] === "u")) {
-        pattern += "G";
-        i++;
-        continue;
+      if (char === 'a' && (iast[i + 1] === 'i' || iast[i + 1] === 'u')) {
+        pattern += 'G'; i++; continue;
       }
       if (longVowels.includes(char)) {
-        pattern += "G";
-        continue;
+        pattern += 'G'; continue;
       }
 
-      const next1 = iast[i + 1] || "";
-      const next2 = iast[i + 2] || "";
+      const next1 = iast[i + 1] || '';
+      const next2 = iast[i + 2] || '';
 
-      if (next1 === "ṃ" || next1 === "ḥ") {
-        pattern += "G";
-        continue;
+      if (next1 === 'ṃ' || next1 === 'ḥ') {
+        pattern += 'G'; continue;
       }
 
       if (!vowels.includes(next1) && !vowels.includes(next2)) {
-        pattern += "G";
-        continue;
+        pattern += 'G'; continue;
       }
 
-      pattern += "L";
+      pattern += 'L';
     }
 
     patterns.push(pattern);
@@ -59,11 +54,10 @@ const getLgPattern = (shloka) => {
   return patterns;
 };
 
-// Pattern Matcher — with fuzzy similarity using simple  Levenshtein distance
+// Pattern Matcher — with fuzzy similarity using simple  Levenshtein distance 
 
 const levenshtein = (a, b) => {
-  const m = a.length,
-    n = b.length;
+  const m = a.length, n = b.length;
   const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
   for (let i = 0; i <= m; i++) dp[i][0] = i;
   for (let j = 0; j <= n; j++) dp[0][j] = j;
@@ -94,11 +88,9 @@ const findMatchInDb = (lgPatterns, dbChandas) => {
 
   const combined = lgPatterns.join("");
 
-  let bestMatch = {
-    name: "Unknown / Mixed",
-    similarity: 0,
-    matchedPattern: "",
-  };
+  let bestMatch = { name: "Unknown / Mixed", similarity: 0, matchedPattern: "" };
+
+  
 
   // 1️⃣ Compare with every chandas pattern using fuzzy similarity
   for (const ch of dbChandas) {
@@ -121,25 +113,18 @@ const findMatchInDb = (lgPatterns, dbChandas) => {
   if (bestMatch.similarity >= 0.7) {
     return {
       identifiedChandas: bestMatch.name,
-      explanation: `Detected pattern (${combined.length} syllables) matches ${
-        bestMatch.name
-      } with ${(bestMatch.similarity * 100).toFixed(
-        1
-      )}% confidence.\nCanonical pattern: ${bestMatch.matchedPattern}`,
+      explanation: `Detected pattern (${combined.length} syllables) matches ${bestMatch.name} with ${(bestMatch.similarity * 100).toFixed(1)}% confidence.\nCanonical pattern: ${bestMatch.matchedPattern}`,
     };
   }
 
   // 3️⃣ Check Anuṣṭubh (8-syllable pādas)
   if (combined.length % 8 === 0) {
     const padas = combined.match(/.{1,8}/g);
-    const ok = padas.every(
-      (p) => p.length === 8 && p[4] === "L" && p[5] === "G"
-    );
+    const ok = padas.every(p => p.length === 8 && p[4] === "L" && p[5] === "G");
     if (ok) {
       return {
         identifiedChandas: "Anuṣṭubh",
-        explanation:
-          "Matches Anuṣṭubh (8-syllable pādas, 5th Laghu, 6th Guru).",
+        explanation: "Matches Anuṣṭubh (8-syllable pādas, 5th Laghu, 6th Guru).",
       };
     }
   }
@@ -151,7 +136,9 @@ const findMatchInDb = (lgPatterns, dbChandas) => {
   };
 };
 
+// ===================================================================
 // Supabase Controllers
+// ===================================================================
 
 export const getAllChandas = async (req, res) => {
   try {
@@ -172,7 +159,9 @@ export const getAllChandas = async (req, res) => {
   }
 };
 
+// ===================================================================
 // POST — Analyze śloka
+// ===================================================================
 
 export const analyzeChandas = async (req, res) => {
   const { shloka } = req.body;
@@ -184,26 +173,17 @@ export const analyzeChandas = async (req, res) => {
   }
 
   try {
-    const { data: dbChandas, error: dbError } = await supabase
-      .from("chandas")
-      .select("*");
+    const { data: dbChandas, error: dbError } = await supabase.from("chandas").select("*");
     if (dbError) throw dbError;
 
     const isDevanagari = /[\u0900-\u097F]/.test(shloka);
-    const devanagariForm = isDevanagari
-      ? shloka
-      : Sanscript.t(shloka, "iast", "devanagari");
-    const latinForm = isDevanagari
-      ? Sanscript.t(shloka, "devanagari", "iast")
-      : shloka;
+    const devanagariForm = isDevanagari ? shloka : Sanscript.t(shloka, "iast", "devanagari");
+    const latinForm = isDevanagari ? Sanscript.t(shloka, "devanagari", "iast") : shloka;
 
     const padaPatterns = getLgPattern(shloka);
     const combinedPattern = padaPatterns.join("|");
 
-    const { identifiedChandas, explanation } = findMatchInDb(
-      padaPatterns,
-      dbChandas
-    );
+    const { identifiedChandas, explanation } = findMatchInDb(padaPatterns, dbChandas);
 
     res.status(200).json({
       success: true,

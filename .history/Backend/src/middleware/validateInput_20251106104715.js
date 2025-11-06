@@ -35,6 +35,7 @@ export const validateShlokaInput = (req, res, next) => {
     // Attach cleaned version to the request body
     req.body.shloka = cleaned;
 
+
     next();
   } catch (error) {
     console.error("Error in input validation middleware:", error);
