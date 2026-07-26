@@ -2,7 +2,6 @@ export const validateShlokaInput = (req, res, next) => {
   try {
     const { shloka } = req.body;
 
-    // 1️ Checking if shloka is provided and is a string
     if (!shloka || typeof shloka !== "string") {
       return res.status(400).json({
         success: false,
@@ -10,7 +9,6 @@ export const validateShlokaInput = (req, res, next) => {
       });
     }
 
-    //  Trim and normalize whitespace at the beginning and the end of the input
 
     const normalized = shloka.trim();
     if (normalized.length === 0) {
@@ -20,7 +18,6 @@ export const validateShlokaInput = (req, res, next) => {
       });
     }
 
-    // 3️ Optional: Prevent excessively long input
     if (normalized.length > 1000) {
       return res.status(400).json({
         success: false,
@@ -29,10 +26,8 @@ export const validateShlokaInput = (req, res, next) => {
       });
     }
 
-    // Optional: Remove unwanted control characters or HTML tags
     const cleaned = normalized.replace(/<[^>]*>?/gm, ""); // remove HTML tags
 
-    // Attach cleaned version to the request body
     req.body.shloka = cleaned;
 
     next();

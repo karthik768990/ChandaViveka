@@ -3,12 +3,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-/**
- * Redirect the user to Google Auth URL
- */
 export const loginWithGoogle = async (req, res) => {
   const redirectTo = `${
-    process.env.APP_REDIRECT_URL || "https://chada-frontend.onrender.com"  //HardCoded as the webpage i will be using is the static and fixed
+    process.env.APP_REDIRECT_URL || "https://chada-frontend.onrender.com" 
   }`; 
 
   const { data, error } = await supabase.auth.signInWithOAuth({
@@ -41,7 +38,7 @@ export const handleAuthCallback = async (req, res) => {
 
   res.json({
     success: true,
-    message: "Authentication successful ✅",
+    message: "Authentication successful ",
     access_token,
     refresh_token,
   });
